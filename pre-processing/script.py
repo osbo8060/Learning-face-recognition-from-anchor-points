@@ -26,10 +26,8 @@ os.makedirs(ANCHOR_PATH)
 
 
 cfg = OmegaConf.load("gpu.config.yml")
-analyzer = FaceAnalyzer(cfg.analyzer)
-
 # %%
-def Process_Image(analyzer, path_img):
+def Process_Image(path_img):
     """
     Processes the input image and extracts important features (anchor points).
 
@@ -40,6 +38,7 @@ def Process_Image(analyzer, path_img):
         processed_image: The image after processing 
         anchor_points: A set of key points or features detected in the image (e.g., corners, edges, or other important features).
     """
+    analyzer = FaceAnalyzer(cfg.analyzer)
     response = analyzer.run(
         path_image=path_img,
         batch_size=cfg.batch_size,
@@ -68,12 +67,12 @@ for name in os.listdir(DATASET_PATH):
 
     for image in os.listdir(temp_path):
 
-        response = Process_Image(analyzer, temp_path + f'/{image}')
+        response = Process_Image( temp_path + f'/{image}')
         pil_image = torchvision.transforms.functional.to_pil_image(response.img)
-        pil_image.save(f'{temp_face_path}/{name}.jpg')
         pts = [face.preds["align"].other["lmk3d"].cpu() for face in response.faces]
         if len(pts) == 1:
             torch.save(pts[0], temp_anchor_path + f'/{image}.pt')
+            pil_image.save(f'{temp_face_path}/{name}.jpg')
 
 
 

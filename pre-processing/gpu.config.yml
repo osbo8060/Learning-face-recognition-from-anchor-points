@@ -183,56 +183,6 @@ analyzer:
         optimize_transform: ${analyzer.optimize_transforms}
         labels:
         - abstract
-    fer:
-      _target_: facetorch.analyzer.predictor.FacePredictor
-      downloader:
-        _target_: facetorch.downloader.DownloaderGDrive
-        file_id: 1xoB5VYOd0XLjb-rQqqHWCkQvma4NytEd
-        path_local: /opt/facetorch/models/torchscript/predictor/fer/2/model.pt
-      device:
-        _target_: torch.device
-        type: ${analyzer.device}
-      preprocessor:
-        _target_: facetorch.analyzer.predictor.pre.PredictorPreProcessor
-        transform:
-          _target_: torchvision.transforms.Compose
-          transforms:
-          - _target_: torchvision.transforms.Resize            
-            size:
-            - 260
-            - 260
-            antialias: True
-          - _target_: torchvision.transforms.Normalize
-            mean:
-            - 0.485
-            - 0.456
-            - 0.406
-            std:
-            - 0.229
-            - 0.224
-            - 0.225
-        device:
-          _target_: torch.device
-          type: ${analyzer.predictor.fer.device.type}
-        optimize_transform: ${analyzer.optimize_transforms}
-        reverse_colors: false
-      postprocessor:
-        _target_: facetorch.analyzer.predictor.post.PostArgMax
-        transform: None
-        device:
-          _target_: torch.device
-          type: ${analyzer.predictor.fer.device.type}
-        optimize_transform: ${analyzer.optimize_transforms}
-        dim: 1
-        labels:
-        - Anger
-        - Contempt
-        - Disgust
-        - Fear
-        - Happiness
-        - Neutral
-        - Sadness
-        - Surprise
     au:
       _target_: facetorch.analyzer.predictor.FacePredictor
       downloader:
@@ -363,50 +313,6 @@ analyzer:
         offsets:
         - 0
         - 0
-    deepfake:
-      _target_: facetorch.analyzer.predictor.FacePredictor
-      downloader:
-        _target_: facetorch.downloader.DownloaderGDrive
-        file_id: 1GjDTwQpvrkCjXOdiBy1oMkzm7nt-bXFg
-        path_local: /opt/facetorch/models/torchscript/predictor/deepfake/1/model.pt
-      device:
-        _target_: torch.device
-        type: ${analyzer.device}
-      preprocessor:
-        _target_: facetorch.analyzer.predictor.pre.PredictorPreProcessor
-        transform:
-          _target_: torchvision.transforms.Compose
-          transforms:
-          - _target_: torchvision.transforms.Resize        
-            size:
-            - 380
-            - 380
-            antialias: True
-          - _target_: torchvision.transforms.Normalize
-            mean:
-            - 0.485
-            - 0.456
-            - 0.406
-            std:
-            - 0.229
-            - 0.224
-            - 0.225
-        device:
-          _target_: torch.device
-          type: ${analyzer.device}
-        optimize_transform: ${analyzer.optimize_transforms}
-        reverse_colors: false
-      postprocessor:
-        _target_: facetorch.analyzer.predictor.post.PostSigmoidBinary
-        transform: None
-        device:
-          _target_: torch.device
-          type: ${analyzer.device}
-        optimize_transform: ${analyzer.optimize_transforms}
-        labels:
-        - Real
-        - Fake
-        threshold: 0.7
     align:
       _target_: facetorch.analyzer.predictor.FacePredictor
       downloader:
