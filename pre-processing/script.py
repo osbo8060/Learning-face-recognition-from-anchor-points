@@ -11,7 +11,7 @@ import shutil
 import torch
 
 # %%
-DATASET_PATH = '../original_dataset/Labeled_Faces_in_the_Wild/lfw-deepfunneled/lfw-deepfunneled/'
+DATASET_PATH = '../Dataset/Labeled_Faces_in_the_Wild/lfw-deepfunneled/lfw-deepfunneled/'
 ANCHOR_PATH = './dataset/anchor_points_dataset/'
 FACE_PATH = './dataset/face_dataset/'
 
@@ -48,6 +48,13 @@ def Process_Image(path_img):
     )
     return response
 
+def Save_Processed_Image(response, path):
+    pil_image = torchvision.transforms.functional.to_pil_image(response.img)
+    pil_image.save(path)
+    return 
+
+def Save_Processed_Feature_Vector(tensor):
+    return
 
 # %%
 for name in os.listdir(DATASET_PATH):
@@ -62,17 +69,23 @@ for name in os.listdir(DATASET_PATH):
     if os.path.exists(temp_face_path):
         shutil.rmtree(temp_face_path)
     
-    os.makedirs(temp_anchor_path)
+    # os.makedirs(temp_anchor_path)
     os.makedirs(temp_face_path)
-
+    i = 0
     for image in os.listdir(temp_path):
 
         response = Process_Image( temp_path + f'/{image}')
-        pil_image = torchvision.transforms.functional.to_pil_image(response.img)
         pts = [face.preds["align"].other["lmk3d"].cpu() for face in response.faces]
         if len(pts) == 1:
-            torch.save(pts[0], temp_anchor_path + f'/{image}.pt')
-            pil_image.save(f'{temp_face_path}/{name}.jpg')
+            
+            Save_Processed_Image(response, f'{temp_face_path}/{name}{i}.jpg')
+            Save_Processed_Feature_Vector(pts[0])
+            i += 1
+    
+    if os.path.isdir(temp_face_path) and len(os.listdir(temp_face_path)) == 0:
+        os.rmdir(temp_face_path)
+    
+
 
 
 
