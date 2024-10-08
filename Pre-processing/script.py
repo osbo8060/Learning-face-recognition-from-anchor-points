@@ -11,7 +11,7 @@ import shutil
 import torch
 
 # %%
-DATASET_PATH = '../Dataset/Labeled_Faces_in_the_Wild/lfw-deepfunneled/lfw-deepfunneled/'
+DATASET_PATH = './Curated_Dataset/'
 ANCHOR_PATH = './dataset/anchor_points_dataset/'
 FACE_PATH = './dataset/face_dataset/'
 
@@ -25,7 +25,7 @@ os.makedirs(FACE_PATH)
 os.makedirs(ANCHOR_PATH)
 
 
-cfg = OmegaConf.load("gpu.config.yml")
+cfg = OmegaConf.load("./gpu.config.yml")
 # %%
 def Process_Image(path_img):
     """
