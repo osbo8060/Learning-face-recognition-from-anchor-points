@@ -375,7 +375,7 @@ analyzer:
         _target_: torch.device
         type: ${analyzer.device}
       optimize_transform: false
-      width: 2
+      width: 1
       color: green
   logger:
     _target_: facetorch.logger.LoggerJsonFile
