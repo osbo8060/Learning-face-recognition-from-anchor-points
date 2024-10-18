@@ -13,7 +13,7 @@ analyzer:
       - _target_: facetorch.transforms.SquarePad
       - _target_: torchvision.transforms.Resize        
         size:
-        - 1080
+        - 250
         antialias: True
   detector:
     _target_: facetorch.analyzer.detector.FaceDetector
