@@ -24,7 +24,7 @@ def min_max_scale_data(data):
     y = data[:, 1]
     z = data[:, 2]
     
-    scaler = MinMaxScaler(feature_range=(0, 1))
+    scaler = MinMaxScaler(feature_range=(-1, 1))
 
     x = scaler.fit_transform(x.reshape(-1, 1))
     y = scaler.fit_transform(y.reshape(-1, 1))
