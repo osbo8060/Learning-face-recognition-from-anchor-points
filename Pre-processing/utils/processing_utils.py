@@ -3,6 +3,7 @@ from scipy.spatial.transform import Rotation as R
 from sklearn.preprocessing import MinMaxScaler
 import torch
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def min_max_scale_data(data):
@@ -128,3 +129,28 @@ def fft_feature_vector(face_tensor):
         transformed_array[:,i] = column
 
     return transformed_array
+
+def plot_3d_2d_scatter(face_tensor_origin):
+    # Extract the x, y, z coordinates
+    x = face_tensor_origin[:, 0]  # First column (x)
+    y = face_tensor_origin[:, 1]  # Second column (y)
+    z = face_tensor_origin[:, 2]  # Third column (z)
+
+    # 3D scatter plot
+    fig_3d = plt.figure()
+    ax_3d = fig_3d.add_subplot(111, projection='3d')
+    ax_3d.scatter(x, y, z)
+    ax_3d.set_xlabel('X axis')
+    ax_3d.set_ylabel('Y axis')
+    ax_3d.set_zlabel('Z axis')
+    plt.title('3D Scatter Plot')
+
+    # 2D scatter plot
+    fig_2d = plt.figure()
+    plt.scatter(x, y)
+    plt.xlabel('x-axis')
+    plt.ylabel('y-axis')
+    plt.title('2D Scatter Plot')
+
+    # Show both plots
+    plt.show()
