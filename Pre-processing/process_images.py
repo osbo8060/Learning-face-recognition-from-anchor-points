@@ -5,21 +5,32 @@ import torchvision
 import os
 import shutil
 import pandas as pd
+import argparse
 
 
 # %%
-DATASET_PATH = './Curated_Dataset/'
+
 ANCHOR_PATH = './dataset/anchor_points_dataset/'
 FACE_PATH = './dataset/face_dataset/'
 
-if os.path.exists(FACE_PATH):
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--reset", type=bool, default=False)
+parser.add_argument("--path", default='./Curated_Dataset/')
+
+args = parser.parse_args()
+
+reset = args.reset
+DATASET_PATH = args.path
+
+if os.path.exists(FACE_PATH) and reset:
     shutil.rmtree(FACE_PATH)
+    os.makedirs(FACE_PATH)
 
-if os.path.exists(ANCHOR_PATH):
+if os.path.exists(ANCHOR_PATH) and reset:
     shutil.rmtree(ANCHOR_PATH)
+    os.makedirs(ANCHOR_PATH)
 
-os.makedirs(FACE_PATH)
-os.makedirs(ANCHOR_PATH)
 
 cfg = OmegaConf.load("./gpu.config.yml")
 
@@ -64,25 +75,26 @@ for name in os.listdir(DATASET_PATH):
     temp_anchor_path = ANCHOR_PATH + f'{name}'
     temp_face_path = FACE_PATH + f'{name}'
 
-    if os.path.exists(temp_face_path):
+    if os.path.exists(temp_face_path) and reset:
         shutil.rmtree(temp_face_path)
-
-
-    os.makedirs(temp_face_path)
-    i = 0
-    for image in os.listdir(temp_path):
-
-        response = Process_Image( temp_path + f'/{image}')
-        pts = [face.preds["align"].other["lmk3d"].cpu() for face in response.faces]
-        if len(pts) == 1:
-            
-            Save_Processed_Image(response, f'{temp_face_path}/{name}{i}.jpg')
-            df_points.loc[len(df_points)] = pts[0].reshape(-1).tolist() + [name]
-            i += 1
-            df_points.to_csv(ANCHOR_PATH + 'data_points.csv', index=False)
     
-    if os.path.isdir(temp_face_path) and len(os.listdir(temp_face_path)) == 0:
-        os.rmdir(temp_face_path)
+
+    i = 0
+    if not os.path.exists(temp_face_path):
+        os.makedirs(temp_face_path)
+        for image in os.listdir(temp_path):
+
+            response = Process_Image( temp_path + f'/{image}')
+            pts = [face.preds["align"].other["lmk3d"].cpu() for face in response.faces]
+            if len(pts) == 1:
+            
+                Save_Processed_Image(response, f'{temp_face_path}/{name}{i}.jpg')
+                df_points.loc[len(df_points)] = pts[0].reshape(-1).tolist() + [name]
+                i += 1
+                df_points.to_csv(ANCHOR_PATH + 'data_points.csv', index=False)
+    
+        if os.path.isdir(temp_face_path) and len(os.listdir(temp_face_path)) == 0:
+            os.rmdir(temp_face_path)
     
     
     
