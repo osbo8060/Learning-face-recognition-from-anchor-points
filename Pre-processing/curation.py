@@ -17,7 +17,7 @@ import argparse
 
 # %%
 parser = argparse.ArgumentParser()
-parser.add_argument("--path", type=list, default=['../Dataset/Labeled_Faces_in_the_Wild/', '../Dataset/Celebrity_Faces_Dataset/'])
+parser.add_argument("--path", type=list, default=['../Dataset/Labeled_Faces_in_the_Wild/'])
 
 args = parser.parse_args()
 DATASET_PATHS = args.path
@@ -29,8 +29,8 @@ if os.path.exists(NEW_PATH):
 os.makedirs(NEW_PATH)
 
 # %%
-lowerthresholdImages = 30
-higherthresholdImages = 40
+lowerthresholdImages = 25
+higherthresholdImages = 35
 
 for dataset_path in DATASET_PATHS:
     for name in os.listdir(dataset_path):
