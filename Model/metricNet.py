@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 class MetricNet(nn.Module):
-    def __init__(self, input_size, num_classes=(False, 10), p=1):
+    def __init__(self, input_size=512*2, num_classes=(False, 10), p=1):
         super().__init__()
         
         hidden_size1 = int(input_size/2)

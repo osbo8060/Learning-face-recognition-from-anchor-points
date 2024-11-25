@@ -250,7 +250,7 @@ class FullyConnectedLayer(nn.Module):
 # dropout_rate: The dropout rate (reduces overfitting by randomly dropping neurons during training, ensuring the network generalizes well)
 ###
 class FeatureNet(nn.Module):
-    def __init__(self, input_shape, feature_dim=512, dropout_rate=0.8):
+    def __init__(self, feature_dim=512, dropout_rate=0.8):
         super(FeatureNet, self).__init__()
 
         self.inception_stem = Inception_stem()
