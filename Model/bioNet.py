@@ -24,21 +24,9 @@ class BioNet(nn.Module):
             nn.Conv2d(64, 128, kernel_size=3, padding=1), # Output: 128x75x75
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),       # Output: 128x37x37
-
-            nn.Conv2d(128, 256, kernel_size=3, padding=1), # Output: 256x37x37
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2), # Output: 256x18x18
-
-            nn.Conv2d(256, 512, kernel_size=3, padding=1), # Output: 512x18x18
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2), # Output: 512x9x9
-
-            nn.Conv2d(512, 1024, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=3, stride=2), # Output: 1024x4x4
             
         )
-        self.fc = nn.Linear( 1024*4*4, 512)
+        self.fc = nn.Linear( 128*37*37, 512)
 
         self.metricNet = nn.Sequential(
             nn.Linear(512*2, 512),
@@ -47,11 +35,8 @@ class BioNet(nn.Module):
             nn.ReLU(),
             nn.Linear(512//2, 512//4),
             nn.ReLU(),
-            nn.Linear(512//4, 512//8),
-            nn.ReLU(),
-            nn.Linear(512//8, 512//16),
-            nn.ReLU(),
-            nn.Linear(512//16, 1)
+            nn.Linear(512//4, 1),
+    
 
         )
     
