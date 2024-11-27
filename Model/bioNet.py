@@ -15,24 +15,57 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 class BioNet(nn.Module):
     def __init__(self):
         super().__init__()
-        self.featureNet = FeatureNet()
-        self.metricNet = MetricNet()
+        self.conv_layers = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=3, padding=1),  # Input: 3x300x300, Output: 32x300x300
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),      # Output: 32x150x150
+            
+            nn.Conv2d(32, 64, kernel_size=3, padding=1), # Output: 64x150x150
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),      # Output: 64x75x75
+            
+            nn.Conv2d(64, 128, kernel_size=3, padding=1), # Output: 128x75x75
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),       # Output: 128x37x37
+
+            nn.Conv2d(128, 256, kernel_size=3, padding=1), # Output: 256x37x37
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2), # Output: 256x18x18
+
+            nn.Conv2d(256, 512, kernel_size=3, padding=1), # Output: 512x18x18
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2) # Output: 512x9x9
+            
+        )
+        self.fc = nn.Linear( 512 * 9 * 9, 512)
+
+        self.metricNet = nn.Sequential(
+            nn.Linear(512*2, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512//2),
+            nn.ReLU(),
+            nn.Linear(512//2, 512//4),
+            nn.ReLU(),
+            nn.Linear(512//4, 512//8),
+            nn.ReLU(),
+            nn.Linear(512//8, 512//16),
+            nn.ReLU(),
+            nn.Linear(512//16, 1)
+
+        )
     
     def forward(self, img1, img2, batch_size):
-        # (2, 3, 299, 299) -> (1, 1024)
-        z = torch.zeros(batch_size)
-        i = 0
-        for tensor1, tensor2 in zip(img1,img2):
-
-            feature_vector1 = self.featureNet(tensor1.unsqueeze(0))
-            feature_vector2 = self.featureNet(tensor2.unsqueeze(0))
         
-            # Concatenate the features along the correct dimension
-            feature_vector = torch.cat((feature_vector1, feature_vector2), dim=1)
-            z_i = self.metricNet(feature_vector)[0]
-            z[i] = z_i
-            i += 1
-        return z
+
+        feature_vector1 = self.conv_layers(img1)
+        feature_vector1 = self.fc(feature_vector1.view(feature_vector1.size(0), -1))
+
+        feature_vector2 = self.conv_layers(img2)
+        feature_vector2 = self.fc(feature_vector2.view(feature_vector2.size(0), -1))
+        
+        # Concatenate the features along the correct dimension
+        feature_vector = torch.cat((feature_vector1, feature_vector2), dim=1)
+        return self.metricNet(feature_vector)
 
 
 
@@ -86,6 +119,7 @@ class BioNetLoss(nn.Module):
         diff = mu - torch.mean(z_batch, dim=0)
         lst = diff * inv_sigma * diff  
         loss = 0.5 * (log_det_term - self.p + trace_term + lst)
+
         return loss[0][0]
     def sort_labels(self, distances, labels):
     
