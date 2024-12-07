@@ -14,13 +14,13 @@ import argparse
 
 # %% [markdown]
 # ## Curating First Dataset (LFW)
-
-# %%
 parser = argparse.ArgumentParser()
-parser.add_argument("--path", type=list, default=['../Dataset/Labeled_Faces_in_the_Wild/', '../Dataset/Celebrity_Faces_Dataset/'])
+parser.add_argument("--path", type=list, default=['../Dataset/Labeled_Faces_in_the_Wild/'])
 
 args = parser.parse_args()
-DATASET_PATHS = args.path
+# %%
+
+DATASET_PATHS = '../Dataset/Labeled_Faces_in_the_Wild/'
 NEW_PATH = './Curated_Dataset/'
 
 
