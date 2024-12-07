@@ -254,30 +254,53 @@ class FeatureNet(nn.Module):
         super(FeatureNet, self).__init__()
 
         self.inception_stem = Inception_stem()
-        self.inception_resnet_a = InceptionResNet_A_Block(in_channel=256,filters=32)  
+
+        # self.inception_resnet_a = InceptionResNet_A_Block(in_channel=256,filters=32)  
+        self.inception_resnet_a_blocks = nn.ModuleList([
+            InceptionResNet_A_Block(in_channel=256, filters=32) for _ in range(1)
+        ])
+        
         self.reduction_a = ReductionA(in_channels=256, k=192, l=192, m=256, n=384)
-        self.inception_resnet_b = InceptionResNet_B_Block(in_channels=896, filters=32)  
+        
+        # self.inception_resnet_b = InceptionResNet_B_Block(in_channels=896, filters=32)  
+        self.inception_resnet_b_blocks = nn.ModuleList([
+            InceptionResNet_B_Block(in_channels=896, filters=32) for _ in range(1)
+        ])
+
         self.reduction_b = ReductionB(in_channels=896)
-        self.inception_resnet_c = InceptionResNet_C_Block(in_channels=1792, filters=32)  
+
+        # self.inception_resnet_c = InceptionResNet_C_Block(in_channels=1792, filters=32)  
+        self.inception_resnet_c_blocks = nn.ModuleList([
+            InceptionResNet_C_Block(in_channels=1792, filters=32) for _ in range(1)
+        ])
+
         self.fc_layer = FullyConnectedLayer(in_channels=1792, feature_dim=feature_dim, dropout_rate=dropout_rate)
 
     def forward(self, x):
 
         x = self.inception_stem(x)
         
-        for _ in range(5):
-            x = self.inception_resnet_a(x)
+        # for _ in range(5):
+        #     x = self.inception_resnet_a(x)
 
+        for block in self.inception_resnet_a_blocks:
+            x = block(x)
+        
+            
         x = self.reduction_a(x)
         
-        for _ in range(10):
-            x = self.inception_resnet_b(x)
-        
+        # for _ in range(10):
+        #     x = self.inception_resnet_b(x)
+        for block in self.inception_resnet_b_blocks:
+            x = block(x)
+
         x = self.reduction_b(x)
 
-        for _ in range(5):
-            x = self.inception_resnet_c(x)
-        
+        # for _ in range(5):
+        #     x = self.inception_resnet_c(x)
+        for block in self.inception_resnet_c_blocks:
+            x = block(x)
+
         x = self.fc_layer(x)
         
         return x
