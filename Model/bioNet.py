@@ -7,9 +7,6 @@ import torchvision.transforms as transforms
 from torchvision import datasets, transforms
 from torch.utils.data import random_split, DataLoader
 
-from featureNet import FeatureNet
-from metricNet import MetricNet
-
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # %%
 class BioNet(nn.Module):
@@ -27,17 +24,9 @@ class BioNet(nn.Module):
             nn.Conv2d(64, 128, kernel_size=3, padding=1), # Output: 128x75x75
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),       # Output: 128x37x37
-
-            nn.Conv2d(128, 256, kernel_size=3, padding=1), # Output: 256x37x37
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2), # Output: 256x18x18
-
-            nn.Conv2d(256, 512, kernel_size=3, padding=1), # Output: 512x18x18
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2) # Output: 512x9x9
             
         )
-        self.fc = nn.Linear( 512 * 9 * 9, 512)
+        self.fc = nn.Linear( 128*37*37, 512)
 
         self.metricNet = nn.Sequential(
             nn.Linear(512*2, 512),
@@ -46,11 +35,8 @@ class BioNet(nn.Module):
             nn.ReLU(),
             nn.Linear(512//2, 512//4),
             nn.ReLU(),
-            nn.Linear(512//4, 512//8),
-            nn.ReLU(),
-            nn.Linear(512//8, 512//16),
-            nn.ReLU(),
-            nn.Linear(512//16, 1)
+            nn.Linear(512//4, 1),
+    
 
         )
     
@@ -66,8 +52,6 @@ class BioNet(nn.Module):
         # Concatenate the features along the correct dimension
         feature_vector = torch.cat((feature_vector1, feature_vector2), dim=1)
         return self.metricNet(feature_vector)
-
-
 
 
 class BioNetLoss(nn.Module):
