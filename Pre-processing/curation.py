@@ -20,7 +20,7 @@ parser.add_argument("--path", type=list, default=['../Dataset/Labeled_Faces_in_t
 args = parser.parse_args()
 # %%
 
-DATASET_PATHS = '../Dataset/Labeled_Faces_in_the_Wild/'
+DATASET_PATHS = ['../Dataset/Labeled_Faces_in_the_Wild/']
 NEW_PATH = './Curated_Dataset/'
 
 
@@ -36,6 +36,7 @@ for dataset_path in DATASET_PATHS:
     for name in os.listdir(dataset_path):
 
         temp_path = os.path.join(dataset_path, name)
+        print(dataset_path)
         if len(os.listdir(temp_path)) >= lowerthresholdImages:
             temp_new_path = os.path.join(NEW_PATH, name)
             images = os.listdir(temp_path)
