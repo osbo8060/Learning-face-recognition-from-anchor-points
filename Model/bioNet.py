@@ -53,6 +53,23 @@ class BioNet(nn.Module):
         feature_vector = torch.cat((feature_vector1, feature_vector2), dim=1)
         return self.metricNet(feature_vector)
 
+class MetricNet(nn.Module):
+    def __init__(self, input_shape, num_classes=1):
+        super().__init__()
+        self.metricNet = nn.Sequential(
+            nn.Linear(input_shape, input_shape//2),
+            nn.ReLU(),
+            nn.Linear(input_shape//2, input_shape//4),
+            nn.ReLU(),
+            nn.Linear(input_shape//4, input_shape//8),
+            nn.ReLU(),
+            nn.Linear(input_shape//8, num_classes),
+    
+
+        )
+    def forward(self, data):
+        return self.metricNet(data)
+    
 
 class BioNetLoss(nn.Module):
     """
