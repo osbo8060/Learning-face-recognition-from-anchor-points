@@ -1,3 +1,7 @@
+# ==============================================================
+#                   Made by Oscar Boman
+# ==============================================================
+
 # %%
 from facetorch import FaceAnalyzer
 from facetorch.analyzer.utilizer import LandmarkDrawerTorch
@@ -12,8 +16,7 @@ import torch
 from PIL import Image
 import argparse
 
-# %% [markdown]
-# ## Curating First Dataset (LFW)
+# %% 
 parser = argparse.ArgumentParser()
 parser.add_argument("--path", type=list, default=['../Dataset/Labeled_Faces_in_the_Wild/'])
 
@@ -29,8 +32,8 @@ if os.path.exists(NEW_PATH):
 os.makedirs(NEW_PATH)
 
 # %%
-lowerthresholdImages = 25
-higherthresholdImages = 35
+lowerthresholdImages = 20
+higherthresholdImages = 30
 
 for dataset_path in DATASET_PATHS:
     for name in os.listdir(dataset_path):
@@ -51,6 +54,9 @@ for dataset_path in DATASET_PATHS:
                 shutil.copy2(src, dst)
 
 
+# ==============================================================
+#                   Made By Daniel Cada
+# ==============================================================
 # %%
 "TODO OBS!! Nuvarande problem med att om man kör flera gånger så skapas '_hor_flipped_hor_flipped' bilder av ngn anledning. Inte klart varför"
 
@@ -81,5 +87,4 @@ for name in os.listdir(selectedPath):
     for image in os.listdir(temp_path):
         path_name = temp_path +"/"+ image
         flipImageHorizontalAndSave(path_name)
-
 

@@ -1,4 +1,8 @@
 
+# ==============================================================
+#                   Entire File Made by Oscar Boman
+# ==============================================================
+
 from scipy.spatial.transform import Rotation as R
 from sklearn.preprocessing import MinMaxScaler
 import torch
@@ -74,7 +78,6 @@ def rotate_face(data):
 
 
 
-    ### VET INTE OM DETTA FUNKAR ###
     z1 = P1[2]
     z2 = P2[2]
     x = face_tensor_orgin[33][0]
@@ -91,7 +94,6 @@ def rotate_face(data):
         z1 = P1[2]
         z2 = P2[2]
 
-    ### VET INTE OM DETTA FUNKAR SLUT ###
 
     if face_tensor_orgin[25][1] > 0:
         r = R.from_euler('z', 180, degrees=True)

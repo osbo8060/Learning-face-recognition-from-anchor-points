@@ -1,3 +1,7 @@
+# ==============================================================
+#                   Entire File Made by Oscar Boman
+# ==============================================================
+
 # %%
 import torch
 import torch.nn as nn
@@ -40,7 +44,7 @@ class BioNet(nn.Module):
 
         )
     
-    def forward(self, img1, img2, batch_size):
+    def forward(self, img1, img2):
         
 
         feature_vector1 = self.conv_layers(img1)
@@ -53,7 +57,8 @@ class BioNet(nn.Module):
         feature_vector = torch.cat((feature_vector1, feature_vector2), dim=1)
         return self.metricNet(feature_vector)
 
-class MetricNet(nn.Module):
+
+class VGG16_MetricNet(nn.Module):
     def __init__(self, input_shape, num_classes=1):
         super().__init__()
         self.metricNet = nn.Sequential(
@@ -73,15 +78,11 @@ class MetricNet(nn.Module):
 
 class BioNetLoss(nn.Module):
     """
-    Custom loss function that computes the loss based on the given embeddings.
-    Suitable for neural networks.
+    Custom loss function that computes the loss based on the distribution assigned to the predicted labels. 
     """
     def __init__(self, p, mu_n, mu_m, sigma):
         """
         Initialize the loss function.
-
-        Parameters:
-        - p: Dimensionality of the data (int).
         """
         super(BioNetLoss, self).__init__()
         self.p = p  # Dimensionality of the feature space
@@ -92,10 +93,6 @@ class BioNetLoss(nn.Module):
     def compute_loss_term(self, mu, z_batch, sigma):
         """
         Compute a single loss term for the given total and batch embeddings.
-
-        Parameters:
-        - z_tot: Tensor of total embeddings (torch.Tensor).
-        - z_batch: Tensor of batch embeddings (torch.Tensor).
 
         Returns:
         - Loss term value (torch.Tensor).

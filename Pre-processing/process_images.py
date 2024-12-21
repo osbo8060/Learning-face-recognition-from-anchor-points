@@ -1,3 +1,8 @@
+
+# ==============================================================
+#                   Entire File Made by Oscar Boman
+# ==============================================================
+
 # %%
 from facetorch import FaceAnalyzer
 from omegaconf import OmegaConf
@@ -13,7 +18,7 @@ import argparse
 ANCHOR_PATH = './dataset/anchor_points_dataset/'
 FACE_PATH = './dataset/face_dataset/'
 
-
+# %%
 parser = argparse.ArgumentParser()
 parser.add_argument("--reset", type=bool, default=False)
 parser.add_argument("--path", default='./Curated_Dataset/')
@@ -21,8 +26,10 @@ parser.add_argument("--path", default='./Curated_Dataset/')
 args = parser.parse_args()
 
 reset = args.reset
-DATASET_PATH = args.path
 
+# %%
+DATASET_PATH = './Curated_Dataset/'
+reset = False
 if os.path.exists(FACE_PATH) and reset:
     shutil.rmtree(FACE_PATH)
     os.makedirs(FACE_PATH)
@@ -67,8 +74,12 @@ def Save_Processed_Image(response, path):
 
 
 # %%
-columns = [f'feature_{i}' for i in range(1, 205)] + ['label']
-df_points = pd.DataFrame(columns=columns)
+if reset: 
+    columns = [f'feature_{i}' for i in range(1, 205)] + ['label']
+    df_points = pd.DataFrame(columns=columns)
+else:
+    df_points = pd.read_csv('./dataset/anchor_points_dataset/data_points.csv')
+
 for name in os.listdir(DATASET_PATH):
 
     temp_path = DATASET_PATH + f'{name}'  
@@ -96,15 +107,3 @@ for name in os.listdir(DATASET_PATH):
         if os.path.isdir(temp_face_path) and len(os.listdir(temp_face_path)) == 0:
             os.rmdir(temp_face_path)
     
-    
-    
-
-
-
-
-
-
-
-
-
-# %%
