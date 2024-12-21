@@ -3,3 +3,5 @@ Pre-processing/dataset/anchor_points_dataset/shape_descriptors_data_points.csv
 Pre-processing/dataset/anchor_points_dataset/rotated_data_points.csv
 Pre-processing/dataset/anchor_points_dataset/pairwise_data_points.csv
 Model/data
+Pre-processing/dataset/anchor_points_dataset/face_recognition/pairwise_data_points.csv
+Pre-processing/dataset/anchor_points_dataset/face_validation/pairwise_data_points.csv
