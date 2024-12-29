@@ -58,7 +58,6 @@ for dataset_path in DATASET_PATHS:
 #                   Made By Daniel Cada
 # ==============================================================
 # %%
-"TODO OBS!! Nuvarande problem med att om man kör flera gånger så skapas '_hor_flipped_hor_flipped' bilder av ngn anledning. Inte klart varför"
 
 """
     Flips an Image on it's horizontal (x) axis and saves it with it's name + "_hor_flipped"

@@ -3,25 +3,12 @@
 # ==============================================================
 
 from facetorch import FaceAnalyzer
-from facetorch.analyzer.utilizer import LandmarkDrawerTorch
 from omegaconf import OmegaConf
-from torch.nn.functional import cosine_similarity
 from typing import Dict
-import operator
-import torchvision
 import os
-import shutil
-import torch
 import pandas as pd
 from PIL import Image
 import argparse
-
-# 1. Create a new CSV for Anchor Points
-# 2. Go inside the folder with the folders with people images
-# 3. For every folder/person, check if they have 2 or more images of them
-# 4. Use Facetorch to extract the Anchor Points of the people in only the first two images
-# 5. Save the 68 Anchor Point Coordinates as x1,y1,z1,x2,y2,z2,...,x68,y68,z68, Label(folder_name)
-# 6. Save the CSV in reasonable folder
 
 NUMBER_OF_IMAGES = 2
 
@@ -78,7 +65,6 @@ for DATASET_PATH in DATASET_PATHS:
                     print("MORE THAN ONE FACE LOCATED IN FILE: ", img_path)
                 elif len(pts) == 1:
                     anchor_points_array.append(pts[0].reshape(-1).tolist())
-                    # 
                     print("Face ", person_folder, " Done!")
                 if len(anchor_points_array) == 2:
                     break
