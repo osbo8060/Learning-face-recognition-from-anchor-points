@@ -3,16 +3,9 @@
 # ==============================================================
 
 # %%
-from facetorch import FaceAnalyzer
-from facetorch.analyzer.utilizer import LandmarkDrawerTorch
-from omegaconf import OmegaConf
-from torch.nn.functional import cosine_similarity
-from typing import Dict
-import operator
-import torchvision
+
 import os
 import shutil
-import torch
 from PIL import Image
 import argparse
 
@@ -23,7 +16,7 @@ parser.add_argument("--path", type=list, default=['../Dataset/Labeled_Faces_in_t
 args = parser.parse_args()
 # %%
 
-DATASET_PATHS = ['../Dataset/Labeled_Faces_in_the_Wild/']
+DATASET_PATHS = args.path
 NEW_PATH = './Curated_Dataset/'
 
 

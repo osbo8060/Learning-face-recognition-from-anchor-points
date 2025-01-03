@@ -26,10 +26,9 @@ parser.add_argument("--path", default='./Curated_Dataset/')
 args = parser.parse_args()
 
 reset = args.reset
+DATASET_PATH = './Curated_Dataset/'
 
 # %%
-DATASET_PATH = './Curated_Dataset/'
-reset = False
 if os.path.exists(FACE_PATH) and reset:
     shutil.rmtree(FACE_PATH)
     os.makedirs(FACE_PATH)
