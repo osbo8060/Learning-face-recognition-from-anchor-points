@@ -58,6 +58,7 @@ class BioNet(nn.Module):
         return self.metricNet(feature_vector)
 
 
+
 class VGG16_MetricNet(nn.Module):
     def __init__(self, input_shape, num_classes=1):
         super().__init__()
